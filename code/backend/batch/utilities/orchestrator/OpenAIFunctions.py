@@ -7,6 +7,7 @@ from ..helpers.LLMHelper import LLMHelper
 from ..tools.PostPromptTool import PostPromptTool
 from ..tools.QuestionAnswerTool import QuestionAnswerTool
 from ..tools.TextProcessingTool import TextProcessingTool
+from ..tools.FunctionAnswerTool import FunctionAnswerTool
 from ..common.Answer import Answer
 
 logger = logging.getLogger(__name__)
@@ -48,6 +49,50 @@ class OpenAIFunctionsOrchestrator(OrchestratorBase):
                     "required": ["text", "operation"],
                 },
             },
+            {
+                "name": "get_pack_items",
+                "description": "Get the relevant packaging items for a given customer list of goods to send",
+                "parameters": {
+                    "type": "object",
+                    "properties": {
+                        "label": {
+                            "type": "string",
+                            "description": "The name of good to send",
+                        },
+                        "length": {
+                            "type": "number",
+                            "description": "The length of the good in cm",
+                        },
+                        "depth": {
+                            "type": "number",
+                            "description": "The depth of the good in cm",
+                        },
+                        "height": {
+                            "type": "number",
+                            "description": "The height of the good in cm",
+                        },
+                    },
+                    "required": ["label, length, depth, height"],
+                },
+            },
+            {
+                "name": "add_to_cart",
+                "description": "Add the list of packaging items to the cart",
+                "parameters": {
+                    "type": "object",
+                    "properties": {
+                        "label": {
+                            "type": "string",
+                            "description": "The name of the packaging item",
+                        },
+                        "quantity": {
+                            "type": "integer",
+                            "description": "The quantity of the packaging item",
+                        },
+                    },
+                    "required": ["label", "quantity"],
+                },
+            },
         ]
 
     async def orchestrate(
@@ -84,45 +129,63 @@ class OpenAIFunctionsOrchestrator(OrchestratorBase):
 
         if result.choices[0].finish_reason == "function_call":
             logger.info("Function call detected")
-            if result.choices[0].message.function_call.name == "search_documents":
-                logger.info("search_documents function detected")
-                question = json.loads(
-                    result.choices[0].message.function_call.arguments
-                )["question"]
-                # run answering chain
-                answering_tool = QuestionAnswerTool()
-                answer = answering_tool.answer_question(question, chat_history)
+            match result.choices[0].message.function_call.name:
+                case "search_documents":
+                    logger.info("search_documents function detected")
+                    question = json.loads(
+                        result.choices[0].message.function_call.arguments
+                    )["question"]
+                    # run answering chain
+                    answering_tool = QuestionAnswerTool()
+                    answer = answering_tool.answer_question(question, chat_history)
 
-                self.log_tokens(
-                    prompt_tokens=answer.prompt_tokens,
-                    completion_tokens=answer.completion_tokens,
-                )
-
-                # Run post prompt if needed
-                if self.config.prompts.enable_post_answering_prompt:
-                    logger.debug("Running post answering prompt")
-                    post_prompt_tool = PostPromptTool()
-                    answer = post_prompt_tool.validate_answer(answer)
                     self.log_tokens(
                         prompt_tokens=answer.prompt_tokens,
                         completion_tokens=answer.completion_tokens,
                     )
-            elif result.choices[0].message.function_call.name == "text_processing":
-                logger.info("text_processing function detected")
-                text = json.loads(result.choices[0].message.function_call.arguments)[
-                    "text"
-                ]
-                operation = json.loads(
-                    result.choices[0].message.function_call.arguments
-                )["operation"]
-                text_processing_tool = TextProcessingTool()
-                answer = text_processing_tool.answer_question(
-                    user_message, chat_history, text=text, operation=operation
-                )
-                self.log_tokens(
-                    prompt_tokens=answer.prompt_tokens,
-                    completion_tokens=answer.completion_tokens,
-                )
+
+                    # Run post prompt if needed
+                    if self.config.prompts.enable_post_answering_prompt:
+                        logger.debug("Running post answering prompt")
+                        post_prompt_tool = PostPromptTool()
+                        answer = post_prompt_tool.validate_answer(answer)
+                        self.log_tokens(
+                            prompt_tokens=answer.prompt_tokens,
+                            completion_tokens=answer.completion_tokens,
+                        )
+                case "text_processing":
+                    logger.info("text_processing function detected")
+                    text = json.loads(
+                        result.choices[0].message.function_call.arguments
+                    )["text"]
+                    operation = json.loads(
+                        result.choices[0].message.function_call.arguments
+                    )["operation"]
+                    text_processing_tool = TextProcessingTool()
+                    answer = text_processing_tool.answer_question(
+                        user_message, chat_history, text=text, operation=operation
+                    )
+                    self.log_tokens(
+                        prompt_tokens=answer.prompt_tokens,
+                        completion_tokens=answer.completion_tokens,
+                    )
+                case "get_pack_items":
+                    logger.info("get_pack_items function detected")
+                    params = json.loads(
+                        result.choices[0].message.function_call.arguments
+                    )
+
+                    # run answering chain
+                    function_tool = FunctionAnswerTool()
+                    answer = function_tool.answer_question(
+                        user_message, chat_history, **params
+                    )
+
+                    self.log_tokens(
+                        prompt_tokens=answer.prompt_tokens,
+                        completion_tokens=answer.completion_tokens,
+                    )
+
         else:
             logger.info("No function call detected")
             text = result.choices[0].message.content

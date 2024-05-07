@@ -34,7 +34,7 @@
             ],
             "cwd": "${workspaceFolder}/code",
             "preLaunchTask": "poetry install",
-            "envFile": "${input:dotEnvFilePath}",
+            "envFile": "${input:dotEnvFilePath",
         },
         {
             "name": "Launch Frontend (UI)",

@@ -204,6 +204,8 @@ class EnvHelper:
             "LOAD_CONFIG_FROM_BLOB_STORAGE"
         )
 
+        self.RAJA_ENDPOINT = os.getenv("RAJA_ENDPOINT", "http://localhost:5001")
+
     def should_use_data(self) -> bool:
         if (
             self.AZURE_SEARCH_SERVICE
