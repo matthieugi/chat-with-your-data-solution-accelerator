@@ -5,6 +5,8 @@ from azure.search.documents.indexes.models import (
     SearchFieldDataType,
     SimpleField,
 )
+from azure.search.documents import SearchClient
+from azure.core.credentials import AzureKeyCredential
 from .LLMHelper import LLMHelper
 from .EnvHelper import EnvHelper
 
@@ -87,6 +89,17 @@ class AzureSearchHelper:
             ),
             semantic_configuration_name=self.env_helper.AZURE_SEARCH_SEMANTIC_SEARCH_CONFIG,
             user_agent="langchain chatwithyourdata-sa",
+        )
+
+    def get_vector_store_azure_search_client(self):
+        return SearchClient(
+            endpoint=self.env_helper.AZURE_SEARCH_SERVICE,
+            index_name=self.env_helper.AZURE_SEARCH_INDEX,
+            credential=(
+                AzureKeyCredential(self.env_helper.AZURE_SEARCH_KEY)
+                if self.env_helper.AZURE_AUTH_TYPE == "keys"
+                else None
+            ),
         )
 
     def get_conversation_logger(self):

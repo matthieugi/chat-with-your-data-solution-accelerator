@@ -21,12 +21,12 @@
     {
       "document_type": "pdf",
       "chunking": {
-        "strategy": "layout",
+        "strategy": "heading",
         "size": 500,
         "overlap": 100
       },
       "loading": {
-        "strategy": "layout"
+        "strategy": "markdown"
       }
     },
     {

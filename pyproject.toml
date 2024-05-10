@@ -38,6 +38,7 @@ pillow = "10.3.0"
 azure-mgmt-cognitiveservices = "^13.5.0"
 jsonschema = "^4.21.1"
 semantic-kernel = {version = "^0.9.6b1", python = "<3.13"}
+azure-ai-documentintelligence = "^1.0.0b3"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.2.0"

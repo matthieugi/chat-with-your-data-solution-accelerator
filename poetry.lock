@@ -350,6 +350,22 @@ azure-core = ">=1.28.0,<2.0.0"
 isodate = ">=0.6.1,<1.0.0"
 
 [[package]]
+name = "azure-ai-documentintelligence"
+version = "1.0.0b3"
+description = "Microsoft Azure AI Document Intelligence Client Library for Python"
+optional = false
+python-versions = ">=3.8"
+files = [
+    {file = "azure-ai-documentintelligence-1.0.0b3.tar.gz", hash = "sha256:f59ccdda3d67a973d661181ccb4efd5e9d04996e8f2d3fb3031928b1605218c1"},
+    {file = "azure_ai_documentintelligence-1.0.0b3-py3-none-any.whl", hash = "sha256:401a1ef01ee79583210bc041e57e6b39db3a8759edd02dd14b6f52e2e0c5cfdc"},
+]
+
+[package.dependencies]
+azure-core = ">=1.30.0"
+isodate = ">=0.6.1"
+typing-extensions = ">=4.6.0"
+
+[[package]]
 name = "azure-ai-formrecognizer"
 version = "3.3.3"
 description = "Microsoft Azure Form Recognizer Client Library for Python"
@@ -2497,7 +2513,6 @@ files = [
     {file = "lxml-5.2.1-cp37-cp37m-musllinux_1_2_x86_64.whl", hash = "sha256:9e2addd2d1866fe112bc6f80117bcc6bc25191c5ed1bfbcf9f1386a884252ae8"},
     {file = "lxml-5.2.1-cp37-cp37m-win32.whl", hash = "sha256:f51969bac61441fd31f028d7b3b45962f3ecebf691a510495e5d2cd8c8092dbd"},
     {file = "lxml-5.2.1-cp37-cp37m-win_amd64.whl", hash = "sha256:b0b58fbfa1bf7367dde8a557994e3b1637294be6cf2169810375caf8571a085c"},
-    {file = "lxml-5.2.1-cp38-cp38-macosx_10_9_universal2.whl", hash = "sha256:3e183c6e3298a2ed5af9d7a356ea823bccaab4ec2349dc9ed83999fd289d14d5"},
     {file = "lxml-5.2.1-cp38-cp38-macosx_10_9_x86_64.whl", hash = "sha256:804f74efe22b6a227306dd890eecc4f8c59ff25ca35f1f14e7482bbce96ef10b"},
     {file = "lxml-5.2.1-cp38-cp38-manylinux_2_12_i686.manylinux2010_i686.manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:08802f0c56ed150cc6885ae0788a321b73505d2263ee56dad84d200cab11c07a"},
     {file = "lxml-5.2.1-cp38-cp38-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:0f8c09ed18ecb4ebf23e02b8e7a22a05d6411911e6fabef3a36e4f371f4f2585"},
@@ -6083,4 +6098,4 @@ testing = ["big-O", "jaraco.functools", "jaraco.itertools", "more-itertools", "p
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "9f907d5126a182514e656ddc6bbe73e7d4929d5343e3965c4fc1627a3a615673"
+content-hash = "d6bf36acc84ba1d820f0c800721d77cf3a85001678ea64e995ef8bfa06b1704f"
