@@ -6,6 +6,7 @@ class ChunkingStrategy(Enum):
     PAGE = "page"
     FIXED_SIZE_OVERLAP = "fixed_size_overlap"
     PARAGRAPH = "paragraph"
+    HEADING = "heading"
 
 
 def get_document_chunker(chunking_strategy: str):
@@ -25,6 +26,10 @@ def get_document_chunker(chunking_strategy: str):
         from .Paragraph import ParagraphDocumentChunking
 
         return ParagraphDocumentChunking()
+    elif chunking_strategy == ChunkingStrategy.HEADING.value:
+        from .Heading import HeadingDocumentChunking
+
+        return HeadingDocumentChunking()
     else:
         raise Exception(f"Unknown chunking strategy: {chunking_strategy}")
 

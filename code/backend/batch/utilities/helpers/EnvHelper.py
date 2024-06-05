@@ -118,6 +118,8 @@ class EnvHelper:
             "USE_ADVANCED_IMAGE_PROCESSING", "False"
         )
 
+        self.MARKDOWN_SPLIT_LEVEL = os.getenv("MARKDOWN_SPLIT_LEVEL", "5")
+
         # Initialize Azure keys based on authentication type and environment settings.
         # When AZURE_AUTH_TYPE is "rbac", azure keys are None or an empty string.
         if self.AZURE_AUTH_TYPE == "rbac":
